@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROBÓTICA EA · Escuela N.º 4-117 Ejército de los Andes</title>
+<style>
+  :root {
+    --blue: #1e5bff;
+    --blue-dark: #0f2f8f;
+    --yellow: #ffc61a;
+    --orange: #ff7a1a;
+    --paper: #ffffff;
+    --soft: #eef3ff;
+    --ink: #17224a;
+    --muted: #5a6585;
+    --line: #dbe3f5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; font-size: 15px; color: var(--ink); background: var(--paper); line-height: 1.5; }
+  a { color: var(--blue); }
+  img { display: block; max-width: 100%; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 18px; }
+
+  .topbar { background: var(--blue-dark); color: #fff; position: sticky; top: 0; z-index: 20; }
+  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-top: 9px; padding-bottom: 9px; }
+  .brand { font-weight: 800; letter-spacing: .08em; font-size: .95rem; }
+  .brand b { color: var(--yellow); }
+  .topbar nav { display: flex; gap: 16px; overflow-x: auto; }
+  .topbar nav a { color: #e3eaff; text-decoration: none; font-size: .85rem; white-space: nowrap; }
+  .topbar nav a:hover { color: var(--yellow); }
+
+  .cover { position: relative; background: var(--blue) url("foto-equipo.jpg") center 28% / cover no-repeat; color: #fff; }
+  .cover::before { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(30,91,255,.88) 0%, rgba(30,91,255,.55) 55%, rgba(30,91,255,.15) 100%); }
+  .cover .wrap { position: relative; padding-top: 64px; padding-bottom: 56px; }
+  .cover h1 { font-size: clamp(2.1rem, 6vw, 3.4rem); line-height: 1.05; letter-spacing: .03em; }
+  .cover h1 span { color: var(--yellow); }
+  .cover p { margin-top: 12px; font-size: 1.05rem; max-width: 460px; }
+  .cover small { display: block; margin-top: 10px; opacity: .92; font-size: .85rem; }
+  .cover .btn { display: inline-block; margin-top: 20px; background: var(--yellow); color: var(--blue-dark); font-weight: 700; text-decoration: none; padding: 9px 22px; border-radius: 999px; font-size: .92rem; }
+  .cover .btn:hover { background: #ffd24d; }
+
+  section { padding: 44px 0 6px; }
+  h2.title { font-size: 1.5rem; color: var(--blue-dark); }
+  h2.title::after { content: ""; display: block; width: 44px; height: 4px; background: var(--yellow); margin-top: 8px; border-radius: 2px; }
+  .lead { color: var(--muted); margin: 10px 0 18px; font-size: .95rem; }
+
+  .search { width: 100%; max-width: 340px; padding: 9px 14px; border: 2px solid var(--line); border-radius: 999px; font-size: .95rem; margin-bottom: 6px; }
+  .search:focus { outline: none; border-color: var(--blue); }
+
+  .cat { margin-top: 26px; }
+  .cat-head { display: flex; align-items: center; gap: 10px; background: var(--c); color: #fff; padding: 8px 16px; border-radius: 10px 10px 0 0; }
+  .cat-head h3 { font-size: 1.1rem; letter-spacing: .05em; text-transform: uppercase; }
+  .cat-head span { margin-left: auto; font-size: .8rem; opacity: .9; }
+  .cat-body { border: 2px solid var(--c); border-top: none; border-radius: 0 0 10px 10px; overflow: hidden; }
+
+  .robot { display: grid; grid-template-columns: 190px minmax(0, 1fr); border-top: 1px solid var(--line); background: #fff; }
+  .robot:first-child { border-top: none; }
+  .pic { background: var(--soft); position: relative; min-height: 120px; overflow: hidden; }
+  .pic .ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #9db0e0; font-size: .85rem; padding: 6px; text-align: center; }
+  .pic img { position: relative; z-index: 1; width: 100%; height: 100%; min-height: 120px; object-fit: cover; }
+  .info { padding: 12px 18px; display: flex; flex-direction: column; justify-content: center; }
+  .info h4 { font-size: 1.1rem; color: var(--ink); }
+  .info p { color: var(--muted); font-size: .9rem; margin-top: 2px; }
+  #empty { display: none; padding: 24px 0; color: var(--muted); }
+
+  .event { border-left: 4px solid var(--orange); padding: 2px 0 2px 14px; margin-bottom: 14px; }
+  .event strong { display: block; color: var(--blue-dark); font-size: 1rem; }
+  .event span { color: var(--muted); font-size: .9rem; }
+  .meet { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 18px; }
+  .meet figure img { width: 100%; height: 190px; object-fit: cover; background: var(--soft); border-radius: 10px; }
+  .meet figure.flyer img { object-fit: contain; background: var(--blue-dark); }
+  .meet figcaption { font-size: .82rem; color: var(--muted); padding-top: 6px; }
+
+  .help { display: grid; grid-template-columns: minmax(0, 250px) minmax(0, 1fr); gap: 26px; align-items: center; background: var(--soft); border: 2px solid var(--yellow); border-radius: 14px; padding: 22px; }
+  .help img { width: 100%; border-radius: 10px; }
+  .help h2 { font-size: 1.35rem; color: var(--blue-dark); margin-bottom: 8px; }
+  .help p { margin-bottom: 9px; font-size: .92rem; }
+  .price { display: inline-block; background: var(--orange); color: #fff; padding: 2px 12px; font-weight: 700; border-radius: 999px; }
+
+  .contact { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px; border-top: 2px solid var(--line); padding-top: 18px; }
+  .contact h3 { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 3px; }
+
+  footer { margin-top: 54px; background: var(--blue-dark); color: #c9d6ff; text-align: center; padding: 18px 0; font-size: .82rem; }
+
+  @media (max-width: 680px) {
+    .robot { grid-template-columns: 120px minmax(0, 1fr); }
+    .info { padding: 10px 14px; }
+    .help { grid-template-columns: 1fr; padding: 18px; }
+    .cover .wrap { padding-top: 46px; padding-bottom: 42px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand">ROBÓTICA <b>EA</b></div>
+    <nav>
+      <a href="#robots">Robots</a>
+      <a href="#encuentros">Encuentros</a>
+      <a href="#novedades">Novedades</a>
+      <a href="#contacto">Contacto</a>
+    </nav>
+  </div>
+</div>
+
+<header class="cover">
+  <div class="wrap">
+    <h1>ROBÓTICA <span>EA</span></h1>
+    <p>Los robots que armamos y llevamos a competir.</p>
+    <small>Escuela N.º 4-117 «Ejército de los Andes» · San Rafael, Mendoza</small>
+    <a class="btn" href="#robots">Ver los robots</a>
+  </div>
+</header>
+
+<main>
+
+  <section id="robots">
+    <div class="wrap">
+      <h2 class="title">Nuestros robots</h2>
+      <p class="lead">Separados por categoría.</p>
+      <input class="search" id="search" type="search" placeholder="Buscar un robot…" aria-label="Buscar un robot">
+      <div id="robots-list"></div>
+      <p id="empty">No se encontró ningún robot con esa búsqueda.</p>
+    </div>
+  </section>
+
+  <section id="encuentros">
+    <div class="wrap">
+      <h2 class="title">Encuentros en los que participamos</h2>
+      <p class="lead">&nbsp;</p>
+
+      <div class="event">
+        <strong>1.º Encuentro de Robótica</strong>
+        <span>UTN San Rafael, Mendoza</span>
+      </div>
+      <div class="event">
+        <strong>2.º Encuentro Probotae Mdza</strong>
+        <span>Nave Cultural, Guaymallén · 31/10/2026</span>
+      </div>
+
+      <div class="meet">
+        <figure>
+          <img src="foto-equipo.jpg" alt="El equipo con el pasacalles de la escuela">
+          <figcaption>El equipo con el pasacalles de la escuela.</figcaption>
+        </figure>
+        <figure>
+          <img src="foto-robots.jpg" alt="Los robots sobre la mesa durante el encuentro">
+          <figcaption>Los robots sobre la mesa durante el encuentro.</figcaption>
+        </figure>
+        <figure class="flyer">
+          <img src="flyer-probotae.jpg" alt="Flyer de Probotae Robotic Challenge">
+          <figcaption>Flyer del Probotae Robotic Challenge.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="novedades">
+    <div class="wrap">
+      <h2 class="title">Novedades</h2>
+      <p class="lead">Lo último de la escuela y del equipo.</p>
+      <div class="help">
+        <img src="flyer-nacional.jpg" alt="Flyer: Ayudanos a viajar al Nacional, alargue reforzado a $20.000">
+        <div>
+          <h2>¡Ayudanos a viajar al Nacional!</h2>
+          <p>Los estudiantes de nuestra institución que van a representar a la escuela en la ONU (Organización de las Naciones Unidas), en la ciudad de Buenos Aires, están recaudando fondos para costear su viaje y los gastos de estar durante 4 días.</p>
+          <p>Por eso impulsaron actividades y la venta de productos armados con sus propias manos. Como equipo directivo estamos orgullosos de contar con estudiantes que trabajan para lograr sus objetivos. Invitamos a la comunidad a colaborar.</p>
+          <p>En esta instancia están vendiendo alargues al valor de <span class="price">$20.000</span></p>
+          <p>Adquirí tu alargue y vas a estar colaborando con el viaje de 5 estudiantes con ganas de representar a la escuela y llevar su conocimiento.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contacto">
+    <div class="wrap">
+      <h2 class="title">Contacto</h2>
+      <p class="lead">Escuela N.º 4-117 «Ejército de los Andes»</p>
+      <div class="contact">
+        <div>
+          <h3>Correo</h3>
+          <p><a href="mailto:Dge4117@mendoza.edu.ar">Dge4117@mendoza.edu.ar</a></p>
+        </div>
+        <div>
+          <h3>Ubicación</h3>
+          <p>Entre Ríos 775<br>San Rafael<br>Provincia de Mendoza</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  ROBÓTICA EA · Escuela N.º 4-117 «Ejército de los Andes» · San Rafael, Mendoza
+</footer>
+
+<script>
+  const CATEGORIAS = [
+    { nombre: "Fútbol",   color: "#1e5bff" },
+    { nombre: "Sumo",     color: "#ff7a1a" },
+    { nombre: "Minisumo", color: "#8a3fd1" },
+    { nombre: "Carrera",  color: "#e5334b" },
+    { nombre: "Laberinto", color: "#12a37a" }
+  ];
+
+  const ROBOTS = [
+    { nombre: "Watón",          categoria: "Fútbol",    foto: "waton.jpg",          desc: "Robot de fútbol de Robótica EA." },
+    { nombre: "Tijuano",        categoria: "Fútbol",    foto: "tijuano.jpg",        desc: "Robot de fútbol de Robótica EA." },
+    { nombre: "Milo J",         categoria: "Fútbol",    foto: "milo-j.jpg",         desc: "Robot de fútbol de Robótica EA." },
+    { nombre: "Arka",           categoria: "Fútbol",    foto: "arka.jpg",           desc: "Robot de fútbol de Robótica EA." },
+    { nombre: "HARLEQUIN 1",    categoria: "Fútbol",    foto: "harlequin-1.jpg",    desc: "Robot de fútbol de Robótica EA." },
+    { nombre: "HARLEQUIN 2",    categoria: "Fútbol",    foto: "harlequin-2.jpg",    desc: "Robot de fútbol de Robótica EA." },
+    { nombre: "Robot 1",        categoria: "Fútbol",    foto: "robot-1.jpg",        desc: "Robot de fútbol de Robótica EA." },
+    { nombre: "Robot 2",        categoria: "Fútbol",    foto: "robot-2.jpg",        desc: "Robot de fútbol de Robótica EA." },
+    { nombre: "Fierro Oxidado", categoria: "Sumo",      foto: "fierro-oxidado.jpg", desc: "Robot de sumo de Robótica EA." },
+    { nombre: "Frankenstein",   categoria: "Sumo",      foto: "frankenstein.jpg",   desc: "Robot de sumo de Robótica EA." },
+    { nombre: "Enano",          categoria: "Minisumo",  foto: "enano.jpg",          desc: "Robot de minisumo de Robótica EA." },
+    { nombre: "Chocolatito",    categoria: "Minisumo",  foto: "chocolatito.jpg",    desc: "Robot de minisumo de Robótica EA." },
+    { nombre: "Colapinto 43",   categoria: "Carrera",   foto: "colapinto-43.jpg",   desc: "Robot de carrera de Robótica EA." },
+    { nombre: "Caramelo",       categoria: "Laberinto", foto: "caramelo.jpg",       desc: "Robot de laberinto de Robótica EA." }
+  ];
+
+  const list = document.getElementById("robots-list");
+  const search = document.getElementById("search");
+  const empty = document.getElementById("empty");
+
+  function render() {
+    const q = search.value.trim().toLowerCase();
+    let total = 0;
+    list.innerHTML = CATEGORIAS.map(c => {
+      const items = ROBOTS.filter(r => r.categoria === c.nombre &&
+        (r.nombre + " " + r.categoria).toLowerCase().includes(q));
+      if (!items.length) return "";
+      total += items.length;
+      return `
+        <div class="cat" style="--c:${c.color}">
+          <div class="cat-head"><h3>${c.nombre}</h3><span>${items.length} ${items.length === 1 ? "robot" : "robots"}</span></div>
+          <div class="cat-body">
+            ${items.map(r => `
+              <article class="robot">
+                <div class="pic">
+                  <div class="ph">${r.nombre}</div>
+                  <img src="${r.foto}" alt="Robot ${r.nombre}" onerror="this.style.display='none'">
+                </div>
+                <div class="info">
+                  <h4>${r.nombre}</h4>
+                  <p>${r.desc}</p>
+                </div>
+              </article>`).join("")}
+          </div>
+        </div>`;
+    }).join("");
+    empty.style.display = total ? "none" : "block";
+  }
+  search.addEventListener("input", render);
+  render();
+</script>
+</body>
+</html>
