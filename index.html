@@ -50,8 +50,10 @@
   .search:focus { outline: none; border-color: var(--blue); }
 
   .cat { margin-top: 26px; }
-  .cat-head { display: flex; align-items: center; gap: 10px; background: var(--c); color: #fff; padding: 8px 16px; border-radius: 10px 10px 0 0; }
-  .cat-head h3 { font-size: 1.1rem; letter-spacing: .05em; text-transform: uppercase; }
+  .cat-head { position: relative; overflow: hidden; display: flex; align-items: center; gap: 10px; background: var(--c); color: #fff; padding: 26px 16px; border-radius: 10px 10px 0 0; }
+  .cat-head::before { content: ""; position: absolute; inset: 0; background: var(--img) center 40% / cover no-repeat; opacity: .42; }
+  .cat-head > * { position: relative; }
+  .cat-head h3 { font-size: 1.25rem; letter-spacing: .06em; text-transform: uppercase; text-shadow: 0 1px 6px rgba(0,0,0,.35); }
   .cat-head span { margin-left: auto; font-size: .8rem; opacity: .9; }
   .cat-body { border: 2px solid var(--c); border-top: none; border-radius: 0 0 10px 10px; overflow: hidden; }
 
@@ -63,6 +65,60 @@
   .info { padding: 12px 18px; display: flex; flex-direction: column; justify-content: center; }
   .info h4 { font-size: 1.1rem; color: var(--ink); }
   .info p { color: var(--muted); font-size: .9rem; margin-top: 2px; }
+
+  /* Desplegable de componentes principales, solo para Fútbol */
+  .components-toggle {
+    grid-column: 1 / -1;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 16px;
+    border: 0;
+    border-top: 1px solid var(--line);
+    background: #f7f9ff;
+    color: var(--blue-dark);
+    font: inherit;
+    font-size: .86rem;
+    font-weight: 750;
+    text-align: left;
+    cursor: pointer;
+  }
+  .components-toggle:hover { background: #edf2ff; }
+  .components-toggle:focus-visible { outline: 3px solid var(--yellow); outline-offset: -3px; }
+  .components-arrow { font-size: 1.2rem; line-height: 1; transition: transform .2s ease; }
+  .components-toggle[aria-expanded="true"] .components-arrow { transform: rotate(180deg); }
+  .components-panel {
+    grid-column: 1 / -1;
+    padding: 12px;
+    background: #fbfcff;
+    border-top: 1px solid var(--line);
+  }
+  .components-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    align-items: start;
+  }
+  .component-card {
+    min-width: 0;
+    padding: 9px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: #fff;
+  }
+  .component-pic {
+    height: 72px;
+    background: var(--soft);
+    border-radius: 6px;
+    margin-bottom: 7px;
+    overflow: hidden;
+  }
+  .component-pic img { width: 100%; height: 100%; object-fit: contain; }
+  .component-code { color: var(--blue); font-size: .72rem; font-weight: 800; letter-spacing: .05em; }
+  .component-card h5 { color: var(--ink); font-size: .86rem; margin: 2px 0 3px; }
+  .component-card p { color: var(--muted); font-size: .78rem; line-height: 1.4; }
   #empty { display: none; padding: 24px 0; color: var(--muted); }
 
   .event { border-left: 4px solid var(--orange); padding: 2px 0 2px 14px; margin-bottom: 14px; }
@@ -87,9 +143,31 @@
   @media (max-width: 680px) {
     .robot { grid-template-columns: 120px minmax(0, 1fr); }
     .info { padding: 10px 14px; }
+    .components-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .component-pic { height: 64px; }
     .help { grid-template-columns: 1fr; padding: 18px; }
     .cover .wrap { padding-top: 46px; padding-bottom: 42px; }
   }
+  @media (max-width: 360px) {
+    .components-grid { grid-template-columns: 1fr 1fr; gap: 7px; }
+    .component-card { padding: 7px; }
+    .component-card p { font-size: .74rem; }
+  }
+
+  /* Pizarras desplegables de los encuentros */
+  .board { border: 2px solid var(--blue-dark); border-radius: 12px; background: #fff; margin-bottom: 16px; overflow: hidden; }
+  .board summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; background: var(--blue-dark); color: #fff; border-bottom: 4px solid var(--yellow); }
+  .board summary::-webkit-details-marker { display: none; }
+  .board summary:focus-visible { outline: 3px solid var(--yellow); outline-offset: -3px; }
+  .board summary strong { display: block; font-size: 1.05rem; }
+  .board summary .sub { font-size: .85rem; opacity: .85; }
+  .board .arrow { font-size: 1.5rem; line-height: 1; color: var(--yellow); transition: transform .2s ease; }
+  .board[open] .arrow { transform: rotate(180deg); }
+  .board-body { padding: 18px; }
+  .board-body p { margin-bottom: 10px; font-size: .93rem; }
+  .board-body ul { margin: 4px 0 14px 20px; font-size: .93rem; }
+  .board-body li { margin-bottom: 3px; }
+  .board-body .meet { margin-top: 14px; }
 </style>
 </head>
 <body>
@@ -117,80 +195,160 @@
 
 <main>
 
-  <section id="robots">
-    <div class="wrap">
-      <h2 class="title">Nuestros robots</h2>
-      <p class="lead">Separados por categoría.</p>
-      <input class="search" id="search" type="search" placeholder="Buscar un robot…" aria-label="Buscar un robot">
-      <div id="robots-list"></div>
-      <p id="empty">No se encontró ningún robot con esa búsqueda.</p>
-    </div>
-  </section>
+<section id="robots">
+  <div class="wrap">
+    <h2 class="title">Nuestros robots</h2>
+    <p class="lead">Separados por categoría.</p>
+    <input class="search" id="search" type="search" placeholder="Buscar un robot…" aria-label="Buscar un robot">
+    <div id="robots-list"></div>
+    <p id="empty">No se encontró ningún robot con esa búsqueda.</p>
+  </div>
+</section>
 
-  <section id="encuentros">
-    <div class="wrap">
-      <h2 class="title">Encuentros en los que participamos</h2>
-      <p class="lead">&nbsp;</p>
+<section id="encuentros">
+  <div class="wrap">
+    <h2 class="title">Encuentros en los que participamos</h2>
+    <p class="lead">Tocá cada encuentro para ver las fotos y el resumen.</p>
 
-      <div class="event">
-        <strong>1.º Encuentro de Robótica</strong>
-        <span>UTN San Rafael, Mendoza</span>
-      </div>
-      <div class="event">
-        <strong>2.º Encuentro Probotae Mdza</strong>
-        <span>Nave Cultural, Guaymallén · 31/10/2026</span>
-      </div>
-
-      <div class="meet">
-        <figure>
-          <img src="foto-equipo.jpg" alt="El equipo con el pasacalles de la escuela">
-          <figcaption>El equipo con el pasacalles de la escuela.</figcaption>
-        </figure>
-        <figure>
-          <img src="foto-robots.jpg" alt="Los robots sobre la mesa durante el encuentro">
-          <figcaption>Los robots sobre la mesa durante el encuentro.</figcaption>
-        </figure>
-        <figure class="flyer">
-          <img src="flyer-probotae.jpg" alt="Flyer de Probotae Robotic Challenge">
-          <figcaption>Flyer del Probotae Robotic Challenge.</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
-  <section id="novedades">
-    <div class="wrap">
-      <h2 class="title">Novedades</h2>
-      <p class="lead">Lo último de la escuela y del equipo.</p>
-      <div class="help">
-        <img src="flyer-nacional.jpg" alt="Flyer: Ayudanos a viajar al Nacional, alargue reforzado a $20.000">
+    <details class="board">
+      <summary>
         <div>
-          <h2>¡Ayudanos a viajar al Nacional!</h2>
-          <p>Los estudiantes de nuestra institución que van a representar a la escuela en la ONU (Organización de las Naciones Unidas), en la ciudad de Buenos Aires, están recaudando fondos para costear su viaje y los gastos de estar durante 4 días.</p>
-          <p>Por eso impulsaron actividades y la venta de productos armados con sus propias manos. Como equipo directivo estamos orgullosos de contar con estudiantes que trabajan para lograr sus objetivos. Invitamos a la comunidad a colaborar.</p>
-          <p>En esta instancia están vendiendo alargues al valor de <span class="price">$20.000</span></p>
-          <p>Adquirí tu alargue y vas a estar colaborando con el viaje de 5 estudiantes con ganas de representar a la escuela y llevar su conocimiento.</p>
+          <strong>1.º Encuentro de Robótica</strong>
+          <span class="sub">UTN San Rafael, Mendoza · 03/10/2026</span>
+        </div>
+        <span class="arrow" aria-hidden="true">⌄</span>
+      </summary>
+      <div class="board-body">
+        <p>El evento se realizó en San Rafael, en el Centro Integrador Universitario.</p>
+        <p><strong>Resultados:</strong></p>
+        <ul>
+          <li>2.º y 3.º puesto en Minisumo</li>
+          <li>3.º puesto en Laberinto</li>
+          <li>3.º puesto en Carreras</li>
+          <li>3.º puesto en Fútbol</li>
+        </ul>
+        <div class="meet">
+          <figure>
+            <img src="foto-utn-1.jpg" alt="Primer encuentro UTN - Foto 1" loading="lazy">
+            <figcaption>1.º Encuentro de Robótica</figcaption>
+          </figure>
+          <figure>
+            <img src="foto-utn-2.jpg" alt="Primer encuentro UTN - Foto 2" loading="lazy">
+            <figcaption>1.º Encuentro de Robótica</figcaption>
+          </figure>
+          <figure>
+            <img src="foto-utn-3.jpg" alt="Primer encuentro UTN - Foto 3" loading="lazy">
+            <figcaption>1.º Encuentro de Robótica</figcaption>
+          </figure>
         </div>
       </div>
-    </div>
-  </section>
+    </details>
 
-  <section id="contacto">
-    <div class="wrap">
-      <h2 class="title">Contacto</h2>
-      <p class="lead">Escuela N.º 4-117 «Ejército de los Andes»</p>
-      <div class="contact">
+    <details class="board">
+      <summary>
         <div>
-          <h3>Correo</h3>
-          <p><a href="mailto:Dge4117@mendoza.edu.ar">Dge4117@mendoza.edu.ar</a></p>
+          <strong>2.º Encuentro Probotae Mdza</strong>
+          <span class="sub">Nave Cultural, Mendoza · 31/10/2026</span>
         </div>
-        <div>
-          <h3>Ubicación</h3>
-          <p>Entre Ríos 775<br>San Rafael<br>Provincia de Mendoza</p>
+        <span class="arrow" aria-hidden="true">⌄</span>
+      </summary>
+      <div class="board-body">
+        <p>El 31 de octubre se realizó el encuentro Robotic Challenge PROBOTAE, en la Nave Cultural de Mendoza.</p>
+        <p>Nuestra institución fue representada por estudiantes de 1.º, 2.º, 3.º y 4.º año en las categorías de fútbol robótico, sumo, minisumo, laberinto y seguidor de línea.</p>
+        <p><strong>Reporte final:</strong></p>
+        <ul>
+          <li>Carreras: 4.º lugar de 34</li>
+          <li>Fútbol: 3.º lugar de 16</li>
+          <li>Minisumo: 1.º y 3.º lugar de 16</li>
+          <li>Sumo: 2.º lugar de 25</li>
+        </ul>
+        <p>Agradecemos al ingeniero y profesor Daniel Giarolli por su presencia y acompañamiento permanente, y a las familias que hicieron posible que nuestros estudiantes pudieran estar presentes en esta competencia.</p>
+        <p>La escuela se enorgullece de contar con alumnos comprometidos y apasionados por lo que hacen.</p>
+        <div class="meet">
+          <figure>
+            <img src="foto-equipo.jpg" alt="El equipo con el pasacalles de la escuela" loading="lazy">
+            <figcaption>El equipo con el pasacalles de la escuela.</figcaption>
+          </figure>
+          <figure>
+            <img src="foto-robots.jpg" alt="Los robots sobre la mesa durante el encuentro" loading="lazy">
+            <figcaption>Los robots sobre la mesa durante el encuentro.</figcaption>
+          </figure>
+          <figure class="flyer">
+            <img src="flyer-probotae.jpg" alt="Flyer de Probotae Robotic Challenge" loading="lazy">
+            <figcaption>Flyer del Probotae Robotic Challenge.</figcaption>
+          </figure>
         </div>
       </div>
+    </details>
+
+    <details class="board">
+      <summary>
+        <div>
+          <strong>Muestra Federal de Educación Técnica</strong>
+          <span class="sub">Centro de Convenciones y Exposiciones</span>
+        </div>
+        <span class="arrow" aria-hidden="true">⌄</span>
+      </summary>
+      <div class="board-body">
+        <p>Tuvimos el placer de acompañar a nuestros estudiantes a la Muestra Federal de Educación Técnica, que se llevó adelante en el Centro de Convenciones y Exposiciones.</p>
+        <p>Participó el área de Electromecánica y Construcciones, con sus proyectos innovadores. También asistió el grupo de Robótica de la escuela.</p>
+        <p>Orgullo de tener estudiantes tan talentosos.</p>
+        <div class="meet">
+          <figure>
+            <img src="foto-muestra-1.jpg" alt="Muestra Federal de Educación Técnica - Foto 1" loading="lazy">
+            <figcaption>Muestra Federal de Educación Técnica</figcaption>
+          </figure>
+          <figure>
+            <img src="foto-muestra-2.jpg" alt="Muestra Federal de Educación Técnica - Foto 2" loading="lazy">
+            <figcaption>Muestra Federal de Educación Técnica</figcaption>
+          </figure>
+          <figure>
+            <img src="foto-muestra-3.jpg" alt="Muestra Federal de Educación Técnica - Foto 3" loading="lazy">
+            <figcaption>Muestra Federal de Educación Técnica</figcaption>
+          </figure>
+          <figure>
+            <img src="foto-muestra-4.jpg" alt="Muestra Federal de Educación Técnica - Foto 4" loading="lazy">
+            <figcaption>Muestra Federal de Educación Técnica</figcaption>
+          </figure>
+        </div>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section id="novedades">
+  <div class="wrap">
+    <h2 class="title">Novedades</h2>
+    <p class="lead">Lo último de la escuela y del equipo.</p>
+    <div class="help">
+      <img src="flyer-nacional.jpg" alt="Flyer: Ayudanos a viajar al Nacional">
+      <div>
+        <h2>¡Ayudanos a viajar al Nacional!</h2>
+        <p>Los estudiantes de nuestra institución que van a representar a la escuela en la ONU (Organización de las Naciones Unidas), en la ciudad de Buenos Aires, están recaudando fondos para costear su viaje y los gastos de estar durante 4 días.</p>
+        <p>Por eso impulsaron actividades y la venta de productos armados con sus propias manos. Como equipo directivo estamos orgullosos de contar con estudiantes que trabajan para lograr sus objetivos. Invitamos a la comunidad a colaborar.</p>
+        <p>En esta instancia están vendiendo alargues al valor de <span class="price">$20.000</span></p>
+        <p>Adquirí tu alargue y vas a estar colaborando con el viaje de 5 estudiantes con ganas de representar a la escuela y llevar su conocimiento.</p>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
+
+<section id="contacto">
+  <div class="wrap">
+    <h2 class="title">Contacto</h2>
+    <p class="lead">Escuela N.º 4-117 «Ejército de los Andes»</p>
+    <div class="contact">
+      <div>
+        <h3>Correo</h3>
+        <p><a href="mailto:Dge4117@mendoza.edu.ar">Dge4117@mendoza.edu.ar</a></p>
+      </div>
+      <div>
+        <h3>Ubicación</h3>
+        <p>Entre Ríos 775<br>San Rafael<br>Provincia de Mendoza</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 </main>
 
@@ -199,65 +357,170 @@
 </footer>
 
 <script>
-  const CATEGORIAS = [
-    { nombre: "Fútbol",   color: "#1e5bff" },
-    { nombre: "Sumo",     color: "#ff7a1a" },
-    { nombre: "Minisumo", color: "#8a3fd1" },
-    { nombre: "Carrera",  color: "#e5334b" },
-    { nombre: "Laberinto", color: "#12a37a" }
-  ];
+const CATEGORIAS = [
+  { nombre: "Fútbol", color: "#1e5bff", foto: "cat-futbol.jpg" },
+  { nombre: "Sumo", color: "#ff7a1a", foto: "cat-sumo.jpg" },
+  { nombre: "Minisumo", color: "#8a3fd1", foto: "cat-minisumo.jpg" },
+  { nombre: "Carrera", color: "#e5334b", foto: "cat-carrera.jpg" },
+  { nombre: "Laberinto", color: "#12a37a", foto: "cat-laberinto.jpg" }
+];
 
-  const ROBOTS = [
-    { nombre: "Watón",          categoria: "Fútbol",    foto: "waton.jpg",          desc: "Robot de fútbol de Robótica EA." },
-    { nombre: "Tijuano",        categoria: "Fútbol",    foto: "tijuano.jpg",        desc: "Robot de fútbol de Robótica EA." },
-    { nombre: "Milo J",         categoria: "Fútbol",    foto: "milo-j.jpg",         desc: "Robot de fútbol de Robótica EA." },
-    { nombre: "Arka",           categoria: "Fútbol",    foto: "arka.jpg",           desc: "Robot de fútbol de Robótica EA." },
-    { nombre: "HARLEQUIN 1",    categoria: "Fútbol",    foto: "harlequin-1.jpg",    desc: "Robot de fútbol de Robótica EA." },
-    { nombre: "HARLEQUIN 2",    categoria: "Fútbol",    foto: "harlequin-2.jpg",    desc: "Robot de fútbol de Robótica EA." },
-    { nombre: "Robot 1",        categoria: "Fútbol",    foto: "robot-1.jpg",        desc: "Robot de fútbol de Robótica EA." },
-    { nombre: "Robot 2",        categoria: "Fútbol",    foto: "robot-2.jpg",        desc: "Robot de fútbol de Robótica EA." },
-    { nombre: "Fierro Oxidado", categoria: "Sumo",      foto: "fierro-oxidado.jpg", desc: "Robot de sumo de Robótica EA." },
-    { nombre: "Frankenstein",   categoria: "Sumo",      foto: "frankenstein.jpg",   desc: "Robot de sumo de Robótica EA." },
-    { nombre: "Enano",          categoria: "Minisumo",  foto: "enano.jpg",          desc: "Robot de minisumo de Robótica EA." },
-    { nombre: "Chocolatito",    categoria: "Minisumo",  foto: "chocolatito.jpg",    desc: "Robot de minisumo de Robótica EA." },
-    { nombre: "Colapinto 43",   categoria: "Carrera",   foto: "colapinto-43.jpg",   desc: "Robot de carrera de Robótica EA." },
-    { nombre: "Caramelo",       categoria: "Laberinto", foto: "caramelo.jpg",       desc: "Robot de laberinto de Robótica EA." }
-  ];
+/* Estos seis componentes se muestran únicamente en los robots de Fútbol. */
+const COMPONENTES_FUTBOL = [
+  {
+    codigo: "C1",
+    nombre: "Arduino Uno",
+    imagen: "C1.jpg",
+    descripcion: "Es el cerebro del robot y controla el funcionamiento del sistema."
+  },
+  {
+    codigo: "C2",
+    nombre: "Módulo HC-05",
+    imagen: "C2.jpg",
+    descripcion: "Permite la comunicación inalámbrica mediante Bluetooth."
+  },
+  {
+    codigo: "C3",
+    nombre: "Shield driver L293D",
+    imagen: "C3.jpg",
+    descripcion: "Controla los motores y gestiona el movimiento del robot."
+  },
+  {
+    codigo: "C4",
+    nombre: "Baterías 18650",
+    imagen: "C4.jpg",
+    descripcion: "Las tres baterías están conectadas en serie y suman 12 V en total."
+  },
+  {
+    codigo: "C5",
+    nombre: "Portapilas 18650",
+    imagen: "C5.jpg",
+    descripcion: "Aloja y conecta las tres baterías que alimentan el robot."
+  },
+  {
+    codigo: "C6",
+    nombre: "Motores y ruedas",
+    imagen: "C6.jpg",
+    descripcion: "Permiten el desplazamiento y el movimiento del robot."
+  }
+];
 
-  const list = document.getElementById("robots-list");
-  const search = document.getElementById("search");
-  const empty = document.getElementById("empty");
+const ROBOTS = [
+  { nombre: "Watón", categoria: "Fútbol", foto: "waton.jpg", desc: "Robot de fútbol de Robótica EA." },
+  { nombre: "Tijuano", categoria: "Fútbol", foto: "tijuano.jpg", desc: "Robot de fútbol de Robótica EA." },
+  { nombre: "Milo J", categoria: "Fútbol", foto: "milo-j.jpg", desc: "Robot de fútbol de Robótica EA." },
+  { nombre: "Arka", categoria: "Fútbol", foto: "arka.jpg", desc: "Robot de fútbol de Robótica EA." },
+  { nombre: "HARLEQUIN 1", categoria: "Fútbol", foto: "harlequin-1.jpg", desc: "Robot de fútbol de Robótica EA." },
+  { nombre: "HARLEQUIN 2", categoria: "Fútbol", foto: "harlequin-2.jpg", desc: "Robot de fútbol de Robótica EA." },
+  { nombre: "Robot 1", categoria: "Fútbol", foto: "robot-1.jpg", desc: "Robot de fútbol de Robótica EA." },
+  { nombre: "Robot 2", categoria: "Fútbol", foto: "robot-2.jpg", desc: "Robot de fútbol de Robótica EA." },
+  { nombre: "Fierro Oxidado", categoria: "Sumo", foto: "fierro-oxidado.jpg", desc: "Robot de sumo de Robótica EA." },
+  { nombre: "Frankenstein", categoria: "Sumo", foto: "frankenstein.jpg", desc: "Robot de sumo de Robótica EA." },
+  { nombre: "Enano", categoria: "Minisumo", foto: "enano.jpg", desc: "Robot de minisumo de Robótica EA." },
+  { nombre: "Chocolatito", categoria: "Minisumo", foto: "chocolatito.jpg", desc: "Robot de minisumo de Robótica EA." },
+  { nombre: "Amiguito", categoria: "Minisumo", foto: "amiguito.jpg", desc: "Robot de minisumo de Robótica EA." },
+  { nombre: "Colapinto 43", categoria: "Carrera", foto: "colapinto-43.jpg", desc: "Robot de carrera de Robótica EA." },
+  { nombre: "Caramelo", categoria: "Laberinto", foto: "caramelo.jpg", desc: "Robot de laberinto de Robótica EA." }
+];
 
-  function render() {
-    const q = search.value.trim().toLowerCase();
-    let total = 0;
-    list.innerHTML = CATEGORIAS.map(c => {
-      const items = ROBOTS.filter(r => r.categoria === c.nombre &&
-        (r.nombre + " " + r.categoria).toLowerCase().includes(q));
-      if (!items.length) return "";
-      total += items.length;
-      return `
-        <div class="cat" style="--c:${c.color}">
-          <div class="cat-head"><h3>${c.nombre}</h3><span>${items.length} ${items.length === 1 ? "robot" : "robots"}</span></div>
-          <div class="cat-body">
-            ${items.map(r => `
+const list = document.getElementById("robots-list");
+const search = document.getElementById("search");
+const empty = document.getElementById("empty");
+
+function renderComponentes() {
+  return COMPONENTES_FUTBOL.map(componente => `
+    <article class="component-card">
+      <div class="component-pic">
+        <img
+          src="${componente.imagen}"
+          alt="${componente.nombre}"
+          loading="lazy"
+          onerror="this.style.display='none'"
+        >
+      </div>
+      <span class="component-code">${componente.codigo}</span>
+      <h5>${componente.nombre}</h5>
+      <p>${componente.descripcion}</p>
+    </article>
+  `).join("");
+}
+
+function render() {
+  const q = search.value.trim().toLowerCase();
+  let total = 0;
+
+  list.innerHTML = CATEGORIAS.map(c => {
+    const items = ROBOTS.filter(r =>
+      r.categoria === c.nombre &&
+      (r.nombre + " " + r.categoria).toLowerCase().includes(q)
+    );
+
+    if (!items.length) return "";
+    total += items.length;
+
+    return `
+      <div class="cat" style="--c:${c.color};--img:url('${c.foto}')">
+        <div class="cat-head">
+          <h3>${c.nombre}</h3>
+          <span>${items.length} ${items.length === 1 ? "robot" : "robots"}</span>
+        </div>
+        <div class="cat-body">
+          ${items.map((r, index) => {
+            const tieneComponentes = r.categoria === "Fútbol";
+            const panelId = `componentes-${c.nombre.toLowerCase()}-${r.nombre.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${index}`;
+            return `
               <article class="robot">
                 <div class="pic">
                   <div class="ph">${r.nombre}</div>
-                  <img src="${r.foto}" alt="Robot ${r.nombre}" onerror="this.style.display='none'">
+                  <img src="${r.foto}" alt="Robot ${r.nombre}" loading="lazy" onerror="this.style.display='none'">
                 </div>
                 <div class="info">
                   <h4>${r.nombre}</h4>
                   <p>${r.desc}</p>
                 </div>
-              </article>`).join("")}
-          </div>
-        </div>`;
-    }).join("");
-    empty.style.display = total ? "none" : "block";
-  }
-  search.addEventListener("input", render);
-  render();
+                ${tieneComponentes ? `
+                  <button
+                    class="components-toggle"
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls="${panelId}"
+                  >
+                    <span>Componentes principales</span>
+                    <span class="components-arrow" aria-hidden="true">⌄</span>
+                  </button>
+                  <div class="components-panel" id="${panelId}" hidden>
+                    <div class="components-grid">
+                      ${renderComponentes()}
+                    </div>
+                  </div>
+                ` : ""}
+              </article>
+            `;
+          }).join("")}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  empty.style.display = total ? "none" : "block";
+}
+
+list.addEventListener("click", event => {
+  const button = event.target.closest(".components-toggle");
+  if (!button) return;
+
+  const panelId = button.getAttribute("aria-controls");
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+
+  const isExpanded = button.getAttribute("aria-expanded") === "true";
+  button.setAttribute("aria-expanded", String(!isExpanded));
+  panel.hidden = isExpanded;
+});
+
+search.addEventListener("input", render);
+render();
 </script>
+
 </body>
 </html>
