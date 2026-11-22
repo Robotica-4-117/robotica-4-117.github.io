@@ -1,9 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ROBÓTICA EA · Escuela N.º 4-117 Ejército de los Andes</title>
+
 <style>
   :root {
     --blue: #1e5bff;
@@ -16,57 +18,200 @@
     --muted: #5a6585;
     --line: #dbe3f5;
   }
+
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-  body { font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif; font-size: 15px; color: var(--ink); background: var(--paper); line-height: 1.5; }
+
+  body {
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.5;
+  }
+
   a { color: var(--blue); }
   img { display: block; max-width: 100%; }
   .wrap { max-width: 980px; margin: 0 auto; padding: 0 18px; }
 
-  .topbar { background: var(--blue-dark); color: #fff; position: sticky; top: 0; z-index: 20; }
-  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding-top: 9px; padding-bottom: 9px; }
+  .topbar {
+    background: var(--blue-dark);
+    color: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  .topbar .wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding-top: 9px;
+    padding-bottom: 9px;
+  }
+
   .brand { font-weight: 800; letter-spacing: .08em; font-size: .95rem; }
   .brand b { color: var(--yellow); }
   .topbar nav { display: flex; gap: 16px; overflow-x: auto; }
-  .topbar nav a { color: #e3eaff; text-decoration: none; font-size: .85rem; white-space: nowrap; }
+
+  .topbar nav a {
+    color: #e3eaff;
+    text-decoration: none;
+    font-size: .85rem;
+    white-space: nowrap;
+  }
+
   .topbar nav a:hover { color: var(--yellow); }
 
-  .cover { position: relative; background: var(--blue) url("foto-equipo.jpg") center 28% / cover no-repeat; color: #fff; }
-  .cover::before { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, rgba(30,91,255,.88) 0%, rgba(30,91,255,.55) 55%, rgba(30,91,255,.15) 100%); }
+  .cover {
+    position: relative;
+    background: var(--blue) url("foto-equipo.jpg") center 28% / cover no-repeat;
+    color: #fff;
+  }
+
+  .cover::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, rgba(30,91,255,.88) 0%, rgba(30,91,255,.55) 55%, rgba(30,91,255,.15) 100%);
+  }
+
   .cover .wrap { position: relative; padding-top: 64px; padding-bottom: 56px; }
   .cover h1 { font-size: clamp(2.1rem, 6vw, 3.4rem); line-height: 1.05; letter-spacing: .03em; }
   .cover h1 span { color: var(--yellow); }
   .cover p { margin-top: 12px; font-size: 1.05rem; max-width: 460px; }
   .cover small { display: block; margin-top: 10px; opacity: .92; font-size: .85rem; }
-  .cover .btn { display: inline-block; margin-top: 20px; background: var(--yellow); color: var(--blue-dark); font-weight: 700; text-decoration: none; padding: 9px 22px; border-radius: 999px; font-size: .92rem; }
+
+  .cover .btn {
+    display: inline-block;
+    margin-top: 20px;
+    background: var(--yellow);
+    color: var(--blue-dark);
+    font-weight: 700;
+    text-decoration: none;
+    padding: 9px 22px;
+    border-radius: 999px;
+    font-size: .92rem;
+  }
+
   .cover .btn:hover { background: #ffd24d; }
 
   section { padding: 44px 0 6px; }
+
   h2.title { font-size: 1.5rem; color: var(--blue-dark); }
-  h2.title::after { content: ""; display: block; width: 44px; height: 4px; background: var(--yellow); margin-top: 8px; border-radius: 2px; }
+
+  h2.title::after {
+    content: "";
+    display: block;
+    width: 44px;
+    height: 4px;
+    background: var(--yellow);
+    margin-top: 8px;
+    border-radius: 2px;
+  }
+
   .lead { color: var(--muted); margin: 10px 0 18px; font-size: .95rem; }
 
-  .search { width: 100%; max-width: 340px; padding: 9px 14px; border: 2px solid var(--line); border-radius: 999px; font-size: .95rem; margin-bottom: 6px; }
+  .search {
+    width: 100%;
+    max-width: 340px;
+    padding: 9px 14px;
+    border: 2px solid var(--line);
+    border-radius: 999px;
+    font-size: .95rem;
+    margin-bottom: 6px;
+  }
+
   .search:focus { outline: none; border-color: var(--blue); }
 
   .cat { margin-top: 26px; }
-  .cat-head { position: relative; overflow: hidden; display: flex; align-items: center; gap: 10px; background: var(--c); color: #fff; padding: 26px 16px; border-radius: 10px 10px 0 0; }
-  .cat-head::before { content: ""; position: absolute; inset: 0; background: var(--img) center 40% / cover no-repeat; opacity: .42; }
-  .cat-head > * { position: relative; }
-  .cat-head h3 { font-size: 1.25rem; letter-spacing: .06em; text-transform: uppercase; text-shadow: 0 1px 6px rgba(0,0,0,.35); }
-  .cat-head span { margin-left: auto; font-size: .8rem; opacity: .9; }
-  .cat-body { border: 2px solid var(--c); border-top: none; border-radius: 0 0 10px 10px; overflow: hidden; }
 
-  .robot { display: grid; grid-template-columns: 190px minmax(0, 1fr); border-top: 1px solid var(--line); background: #fff; }
+  .cat-head {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--c);
+    color: #fff;
+    padding: 26px 16px;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .cat-head::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--img) center 40% / cover no-repeat;
+    opacity: .42;
+  }
+
+  .cat-head > * { position: relative; }
+
+  .cat-head h3 {
+    font-size: 1.25rem;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    text-shadow: 0 1px 6px rgba(0,0,0,.35);
+  }
+
+  .cat-head span { margin-left: auto; font-size: .8rem; opacity: .9; }
+
+  .cat-body {
+    border: 2px solid var(--c);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+    overflow: hidden;
+  }
+
+  .robot {
+    display: grid;
+    grid-template-columns: 190px minmax(0, 1fr);
+    border-top: 1px solid var(--line);
+    background: #fff;
+  }
+
   .robot:first-child { border-top: none; }
-  .pic { background: var(--soft); position: relative; min-height: 120px; overflow: hidden; }
-  .pic .ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #9db0e0; font-size: .85rem; padding: 6px; text-align: center; }
-  .pic img { position: relative; z-index: 1; width: 100%; height: 100%; min-height: 120px; object-fit: cover; }
-  .info { padding: 12px 18px; display: flex; flex-direction: column; justify-content: center; }
+
+  .pic {
+    background: var(--soft);
+    position: relative;
+    min-height: 120px;
+    overflow: hidden;
+  }
+
+  .pic .ph {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9db0e0;
+    font-size: .85rem;
+    padding: 6px;
+    text-align: center;
+  }
+
+  .pic img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 120px;
+    object-fit: cover;
+  }
+
+  .info {
+    padding: 12px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
   .info h4 { font-size: 1.1rem; color: var(--ink); }
   .info p { color: var(--muted); font-size: .9rem; margin-top: 2px; }
 
-  /* Desplegable de componentes principales, solo para Fútbol */
   .components-toggle {
     grid-column: 1 / -1;
     width: 100%;
@@ -85,22 +230,38 @@
     text-align: left;
     cursor: pointer;
   }
+
   .components-toggle:hover { background: #edf2ff; }
-  .components-toggle:focus-visible { outline: 3px solid var(--yellow); outline-offset: -3px; }
-  .components-arrow { font-size: 1.2rem; line-height: 1; transition: transform .2s ease; }
-  .components-toggle[aria-expanded="true"] .components-arrow { transform: rotate(180deg); }
+
+  .components-toggle:focus-visible {
+    outline: 3px solid var(--yellow);
+    outline-offset: -3px;
+  }
+
+  .components-arrow {
+    font-size: 1.2rem;
+    line-height: 1;
+    transition: transform .2s ease;
+  }
+
+  .components-toggle[aria-expanded="true"] .components-arrow {
+    transform: rotate(180deg);
+  }
+
   .components-panel {
     grid-column: 1 / -1;
     padding: 12px;
     background: #fbfcff;
     border-top: 1px solid var(--line);
   }
+
   .components-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 10px;
     align-items: start;
   }
+
   .component-card {
     min-width: 0;
     padding: 9px;
@@ -108,6 +269,7 @@
     border-radius: 9px;
     background: #fff;
   }
+
   .component-pic {
     height: 72px;
     background: var(--soft);
@@ -115,30 +277,189 @@
     margin-bottom: 7px;
     overflow: hidden;
   }
+
   .component-pic img { width: 100%; height: 100%; object-fit: contain; }
   .component-code { color: var(--blue); font-size: .72rem; font-weight: 800; letter-spacing: .05em; }
   .component-card h5 { color: var(--ink); font-size: .86rem; margin: 2px 0 3px; }
   .component-card p { color: var(--muted); font-size: .78rem; line-height: 1.4; }
   #empty { display: none; padding: 24px 0; color: var(--muted); }
 
+  /* VOTACIÓN ROBÓTICA EA */
+
+  #votacion { padding: 42px 0 12px; }
+
+  .vote-card {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    background: linear-gradient(135deg, #0f2f8f, #1e5bff);
+    color: #fff;
+    border-radius: 18px;
+    padding: 34px 22px;
+    box-shadow: 0 10px 28px rgba(15,47,143,.16);
+  }
+
+  .vote-card::before {
+    content: "";
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    border: 25px solid rgba(255,255,255,.07);
+    border-radius: 50%;
+    top: -95px;
+    right: -65px;
+  }
+
+  .vote-card::after {
+    content: "";
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    border: 20px solid rgba(255,255,255,.06);
+    border-radius: 50%;
+    bottom: -95px;
+    left: -65px;
+  }
+
+  .vote-content { position: relative; z-index: 1; }
+
+  .vote-label {
+    display: inline-block;
+    color: var(--yellow);
+    font-size: .75rem;
+    font-weight: 800;
+    letter-spacing: .13em;
+    margin-bottom: 10px;
+  }
+
+  .vote-card h2 { font-size: clamp(1.45rem, 4vw, 2rem); }
+  .vote-card > .vote-content > p { margin-top: 8px; color: #e3eaff; }
+
+  .vote-counter {
+    margin: 22px auto 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #like-count {
+    font-size: clamp(2.8rem, 9vw, 4rem);
+    line-height: 1.1;
+    font-weight: 850;
+    color: var(--yellow);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .vote-caption {
+    font-size: .72rem;
+    letter-spacing: .12em;
+    font-weight: 750;
+    color: #e3eaff;
+    margin-top: 5px;
+  }
+
+  .vote-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: 9px;
+    min-width: 175px;
+    padding: 12px 23px;
+    border: none;
+    border-radius: 999px;
+    background: var(--yellow);
+    color: var(--blue-dark);
+    font: inherit;
+    font-weight: 800;
+    font-size: .98rem;
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease;
+  }
+
+  .vote-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    background: #ffda62;
+  }
+
+  .vote-button:focus-visible {
+    outline: 3px solid white;
+    outline-offset: 4px;
+  }
+
+  .vote-button:disabled {
+    cursor: default;
+    opacity: .78;
+  }
+
+  .vote-message {
+    min-height: 24px;
+    margin-top: 13px;
+    color: #e3eaff;
+    font-size: .85rem;
+  }
+
   .event { border-left: 4px solid var(--orange); padding: 2px 0 2px 14px; margin-bottom: 14px; }
   .event strong { display: block; color: var(--blue-dark); font-size: 1rem; }
   .event span { color: var(--muted); font-size: .9rem; }
-  .meet { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 18px; }
-  .meet figure img { width: 100%; height: 190px; object-fit: cover; background: var(--soft); border-radius: 10px; }
+
+  .meet {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  .meet figure img {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    background: var(--soft);
+    border-radius: 10px;
+  }
+
   .meet figure.flyer img { object-fit: contain; background: var(--blue-dark); }
   .meet figcaption { font-size: .82rem; color: var(--muted); padding-top: 6px; }
 
-  .help { display: grid; grid-template-columns: minmax(0, 250px) minmax(0, 1fr); gap: 26px; align-items: center; background: var(--soft); border: 2px solid var(--yellow); border-radius: 14px; padding: 22px; }
+  .help {
+    display: grid;
+    grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
+    gap: 26px;
+    align-items: center;
+    background: var(--soft);
+    border: 2px solid var(--yellow);
+    border-radius: 14px;
+    padding: 22px;
+  }
+
   .help img { width: 100%; border-radius: 10px; }
   .help h2 { font-size: 1.35rem; color: var(--blue-dark); margin-bottom: 8px; }
   .help p { margin-bottom: 9px; font-size: .92rem; }
   .price { display: inline-block; background: var(--orange); color: #fff; padding: 2px 12px; font-weight: 700; border-radius: 999px; }
 
-  .contact { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px; border-top: 2px solid var(--line); padding-top: 18px; }
-  .contact h3 { font-size: .78rem; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 3px; }
+  .contact {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 22px;
+    border-top: 2px solid var(--line);
+    padding-top: 18px;
+  }
 
-  footer { margin-top: 54px; background: var(--blue-dark); color: #c9d6ff; text-align: center; padding: 18px 0; font-size: .82rem; }
+  .contact h3 {
+    font-size: .78rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 3px;
+  }
+
+  footer {
+    margin-top: 54px;
+    background: var(--blue-dark);
+    color: #c9d6ff;
+    text-align: center;
+    padding: 18px 0;
+    font-size: .82rem;
+  }
 
   @media (max-width: 680px) {
     .robot { grid-template-columns: 120px minmax(0, 1fr); }
@@ -147,18 +468,43 @@
     .component-pic { height: 64px; }
     .help { grid-template-columns: 1fr; padding: 18px; }
     .cover .wrap { padding-top: 46px; padding-bottom: 42px; }
+    .vote-card { padding: 30px 17px; }
   }
+
   @media (max-width: 360px) {
     .components-grid { grid-template-columns: 1fr 1fr; gap: 7px; }
     .component-card { padding: 7px; }
     .component-card p { font-size: .74rem; }
   }
 
-  /* Pizarras desplegables de los encuentros */
-  .board { border: 2px solid var(--blue-dark); border-radius: 12px; background: #fff; margin-bottom: 16px; overflow: hidden; }
-  .board summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; background: var(--blue-dark); color: #fff; border-bottom: 4px solid var(--yellow); }
+  .board {
+    border: 2px solid var(--blue-dark);
+    border-radius: 12px;
+    background: #fff;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  .board summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--blue-dark);
+    color: #fff;
+    border-bottom: 4px solid var(--yellow);
+  }
+
   .board summary::-webkit-details-marker { display: none; }
-  .board summary:focus-visible { outline: 3px solid var(--yellow); outline-offset: -3px; }
+
+  .board summary:focus-visible {
+    outline: 3px solid var(--yellow);
+    outline-offset: -3px;
+  }
+
   .board summary strong { display: block; font-size: 1.05rem; }
   .board summary .sub { font-size: .85rem; opacity: .85; }
   .board .arrow { font-size: 1.5rem; line-height: 1; color: var(--yellow); transition: transform .2s ease; }
@@ -170,6 +516,7 @@
   .board-body .meet { margin-top: 14px; }
 </style>
 </head>
+
 <body>
 
 <div class="topbar">
@@ -177,6 +524,7 @@
     <div class="brand">ROBÓTICA <b>EA</b></div>
     <nav>
       <a href="#robots">Robots</a>
+      <a href="#votacion">Apoyanos</a>
       <a href="#encuentros">Encuentros</a>
       <a href="#novedades">Novedades</a>
       <a href="#contacto">Contacto</a>
@@ -202,6 +550,33 @@
     <input class="search" id="search" type="search" placeholder="Buscar un robot…" aria-label="Buscar un robot">
     <div id="robots-list"></div>
     <p id="empty">No se encontró ningún robot con esa búsqueda.</p>
+  </div>
+</section>
+
+<!-- VOTACIÓN GENERAL DE ROBÓTICA EA -->
+<section id="votacion">
+  <div class="wrap">
+    <div class="vote-card">
+      <div class="vote-content">
+        <span class="vote-label">ROBÓTICA EA · COMUNIDAD</span>
+        <h2>¿Te gusta nuestra página?</h2>
+        <p>Apoyá el trabajo de nuestros estudiantes con tu voto.</p>
+
+        <div class="vote-counter">
+          <span id="like-count">278</span>
+          <span class="vote-caption">PERSONAS QUE NOS APOYAN</span>
+        </div>
+
+        <button id="like-button" class="vote-button" type="button">
+          <span>👍</span>
+          <span id="like-text">¡Me gusta!</span>
+        </button>
+
+        <p id="vote-message" class="vote-message" aria-live="polite">
+          ¡Tu apoyo nos ayuda a seguir creciendo!
+        </p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -356,6 +731,9 @@
   ROBÓTICA EA · Escuela N.º 4-117 «Ejército de los Andes» · San Rafael, Mendoza
 </footer>
 
+<!-- Biblioteca oficial de Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
 const CATEGORIAS = [
   { nombre: "Fútbol", color: "#1e5bff", foto: "cat-futbol.jpg" },
@@ -365,7 +743,6 @@ const CATEGORIAS = [
   { nombre: "Laberinto", color: "#12a37a", foto: "cat-laberinto.jpg" }
 ];
 
-/* Estos seis componentes se muestran únicamente en los robots de Fútbol. */
 const COMPONENTES_FUTBOL = [
   {
     codigo: "C1",
@@ -468,6 +845,7 @@ function render() {
           ${items.map((r, index) => {
             const tieneComponentes = r.categoria === "Fútbol";
             const panelId = `componentes-${c.nombre.toLowerCase()}-${r.nombre.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${index}`;
+
             return `
               <article class="robot">
                 <div class="pic">
@@ -520,6 +898,131 @@ list.addEventListener("click", event => {
 
 search.addEventListener("input", render);
 render();
+
+/* =========================================
+   CONEXIÓN CON SUPABASE: VOTOS DE ROBÓTICA EA
+   ========================================= */
+
+const SUPABASE_URL = "https://ktxnofpcanrdkekvqgbl.supabase.co";
+const SUPABASE_KEY = "sb_publishable_IXoJEBa_cY_OiDC6etjB1w_5qvpncYI";
+
+const likeCount = document.getElementById("like-count");
+const likeButton = document.getElementById("like-button");
+const likeText = document.getElementById("like-text");
+const voteMessage = document.getElementById("vote-message");
+
+const voterKey = "robotica_ea_visitor";
+const votedKey = "robotica_ea_voted";
+
+let visitorId = null;
+let db = null;
+
+function crearIdentificador() {
+  if (crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+
+  const bytes = new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+
+  bytes[6] = (bytes[6] & 15) | 64;
+  bytes[8] = (bytes[8] & 63) | 128;
+
+  const hex = Array.from(bytes, b => b.toString(16).padStart(2, "0")).join("");
+
+  return [
+    hex.slice(0, 8),
+    hex.slice(8, 12),
+    hex.slice(12, 16),
+    hex.slice(16, 20),
+    hex.slice(20)
+  ].join("-");
+}
+
+function mostrarVotoRegistrado() {
+  likeButton.disabled = true;
+  likeText.textContent = "¡Ya votaste!";
+  voteMessage.textContent = "¡Gracias por apoyar a Robótica EA!";
+}
+
+async function cargarVotos() {
+  const { data, error } = await db.rpc("get_site_likes");
+
+  if (error) {
+    console.error("Error al cargar los votos:", error);
+    voteMessage.textContent = "No pudimos cargar los votos. Intentá recargar la página.";
+    return;
+  }
+
+  likeCount.textContent = Number(data).toLocaleString("es-AR");
+
+  if (localStorage.getItem(votedKey)) {
+    mostrarVotoRegistrado();
+  } else {
+    likeButton.disabled = false;
+  }
+}
+
+async function votar() {
+  if (localStorage.getItem(votedKey)) {
+    mostrarVotoRegistrado();
+    return;
+  }
+
+  likeButton.disabled = true;
+  likeText.textContent = "Registrando...";
+  voteMessage.textContent = "Estamos registrando tu voto...";
+
+  const { data, error } = await db.rpc(
+    "increment_site_likes",
+    { p_visitor_id: visitorId }
+  );
+
+  if (error) {
+    console.error("Error al registrar el voto:", error);
+
+    likeButton.disabled = false;
+    likeText.textContent = "¡Me gusta!";
+    voteMessage.textContent = "No se pudo registrar el voto. Intentá nuevamente.";
+    return;
+  }
+
+  localStorage.setItem(votedKey, "true");
+
+  likeCount.textContent = Number(data).toLocaleString("es-AR");
+  likeText.textContent = "¡Gracias por votar!";
+  voteMessage.textContent = "¡Gracias por apoyar a Robótica EA!";
+  likeButton.disabled = true;
+}
+
+async function iniciarVotacion() {
+  try {
+    if (!window.supabase) {
+      throw new Error("No se pudo cargar la biblioteca de Supabase.");
+    }
+
+    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    visitorId = localStorage.getItem(voterKey);
+
+    if (!visitorId) {
+      visitorId = crearIdentificador();
+      localStorage.setItem(voterKey, visitorId);
+    }
+
+    likeButton.disabled = true;
+    likeButton.addEventListener("click", votar);
+
+    await cargarVotos();
+
+  } catch (error) {
+    console.error("Error al iniciar el sistema de votación:", error);
+    voteMessage.textContent = "No se pudo conectar con el sistema de votación.";
+    likeButton.disabled = true;
+  }
+}
+
+iniciarVotacion();
 </script>
 
 </body>
